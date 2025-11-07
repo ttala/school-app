@@ -1,0 +1,61 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: school-app-dep
+spec:
+ replicas: 2
+ strategy: 
+    type: Recreate
+ selector: 
+   matchLabels: 
+     app: schoolapp
+ template:
+  metadata:
+   name: schoolapp
+   labels:
+     app: schoolapp	 
+  spec: 
+    containers:
+    - name: schoolapp
+      image: ttala/school-app
+      imagePullPolicy: Always
+      ports:
+      - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: schoolapp-svc
+spec:
+  selector:
+   app: schoolapp
+  ports:
+   - port: 80
+     targetPort: 8080
+...
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: schoolapp-ingress
+  annotations:
+     cert-manager.io/cluster-issuer: letsencrypt
+     acme.cert-manager.io/http01-edit-in-place: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - school.kerocam.com
+      secretName: keros-tls
+  rules:
+    - host: school.kerocam.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: schoolapp-svc
+                port:
+                  number: 80
