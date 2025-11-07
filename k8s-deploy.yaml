@@ -18,7 +18,7 @@ spec:
   spec: 
     containers:
     - name: schoolapp
-      image: ttala/school-app
+      image: ttyeri/school-app
       imagePullPolicy: Always
       ports:
       - containerPort: 8080
