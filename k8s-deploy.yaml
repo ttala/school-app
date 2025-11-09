@@ -40,7 +40,7 @@ kind: Certificate
 metadata:
   name: keros-cert-school
 spec:
-  secretName: keros-tls
+  secretName: keros-tls-school
   issuerRef:
     name: letsencrypt
     kind: ClusterIssuer
@@ -61,7 +61,7 @@ spec:
   tls:
     - hosts:
         - school.kerocam.com
-      secretName: keros-tls
+      secretName: keros-tls-school
   rules:
     - host: school.kerocam.com
       http:
